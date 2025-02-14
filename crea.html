@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Sites</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" href="as.png" type="image/png">
+</head>
+<body>
+
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+        font-family: Poppins, sans-serif;
+        margin: 0;
+        background: linear-gradient(135deg, #e008f6, #f174ff);
+    }
+    .container {
+        max-width: 600px;
+        padding: 40px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    textarea {
+        width: 100%;
+        height: 200px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        padding: 10px;
+        border: 2px solid #e8e8e8;
+        background-color: #fff;
+    }
+    button {
+        padding: 12px 24px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 8px;
+        background: #e008f6;
+        color: white;
+        border: none;
+        transition: background 0.3s ease;
+    }
+    button:hover {
+        background: #f174ff;
+    }
+    h2 {
+        color: black;
+    }
+    .error-message {
+        color: red;
+        margin-top: 10px;
+    }
+    .back-button {
+        text-align: left;
+        margin-bottom: 20px;
+    }
+    .back-button a {
+        text-decoration: none;
+        color: #e008f6;
+        font-size: 16px;
+    }
+    .back-button a:hover {
+        color: #f174ff;
+    }
+</style>
+
+<div class="container">
+    <div class="back-button">
+        <a href="index.html">← Indietro</a>
+    </div>
+    <h2>crea il tuo file</h2>
+    <textarea id="codeInput" placeholder="Inserisci il codice qui..."></textarea>
+    <br>
+    <button onclick="saveFile('text/html', 'index.html')">Scarica HTML</button>
+    <button onclick="saveFile('text/css', 'style.css')">Scarica CSS</button>
+    <button onclick="saveFile('text/javascript', 'script.js')">Scarica JS</button>
+    <div id="error" class="error-message"></div>
+</div>
+
+<script>
+    let isSaveCancelled = false;  // Variabile per verificare se l'utente ha annullato il salvataggio
+
+    async function saveFile(type, defaultName) {
+        const code = document.getElementById('codeInput').value;
+        if (!code) {
+            document.getElementById('error').textContent = 'Devi scrivere qualcosa nel campo di testo prima di scaricare.';
+            return;
+        }
+        document.getElementById('error').textContent = '';
+
+        // Controlla la disponibilità del metodo showSaveFilePicker
+        if (window.showSaveFilePicker) {
+            try {
+                isSaveCancelled = false;  // Reset quando inizia il processo di salvataggio
+                const handle = await window.showSaveFilePicker({
+                    suggestedName: defaultName,
+                    types: [{ description: type, accept: { [type]: ['.' + defaultName.split('.').pop()] } }]
+                });
+                const writable = await handle.createWritable();
+                await writable.write(code);
+                await writable.close();
+            } catch (error) {
+                // Se l'utente annulla (pressione "Esc"), non fare nulla
+                if (!isSaveCancelled) {
+                    console.error('Errore durante il salvataggio del file:', error);
+                    fallbackDownload(code, type, defaultName);
+                }
+            }
+        } else {
+            // Metodo di fallback per i browser che non supportano showSaveFilePicker
+            fallbackDownload(code, type, defaultName);
+        }
+    }
+
+    // Funzione che avvisa quando il salvataggio è stato annullato
+    window.addEventListener('cancel', () => {
+        isSaveCancelled = true;  // Segna che il salvataggio è stato annullato
+    });
+
+    function fallbackDownload(content, type, filename) {
+        // Crea un oggetto Blob dal contenuto
+        const blob = new Blob([content], { type });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        // Triggera il click per il download
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Sites</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">   
+    <link rel="icon" href="as.png" type="image/png">
+</head>
+<body>
+
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+        font-family: Poppins, sans-serif;
+        margin: 0;
+        background: linear-gradient(135deg, #e008f6, #f174ff);
+    }
+    .container {
+        max-width: 600px;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    img {
+        width: 100%;
+        max-width: 400px;
+        border-radius: 15px;
+        margin-top: 20px;
+    }
+    .offline-message {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #ff4d4d;
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .button-container {
+        margin-top: 20px;
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+    .button {
+        padding: 12px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s ease;
+        font-weight: 600;
+        color: white;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .btn-common {
+        background: #e008f6;
+    }
+    .btn-common:hover {
+        background: #c007d1;
+        transform: scale(1.1);
+    }
+</style>
+
+<div class="container">
+    <h1>Benvenuto su Aura Sites</h1>
+    <p>Questo è un modello predefinito per i tuoi progetti web con Aura Sites.</p>
+    <img src="adh.png" alt="ADH" class="adh-logo">
+    
+    <div class="button-container">
+        <a href="crea.html" class="button btn-common">Crea file</a>
+        <a href="modifica.html" class="button btn-common">Modifica file</a>
+    </div>
+</div>
+
+<div class="offline-message" id="offlineMessage">
+    ⚠ :( Sei offline! Controlla la tua connessione. 🔌
+</div>
+
+<script>
+    function updateOnlineStatus() {
+        const offlineMessage = document.getElementById('offlineMessage');
+        if (navigator.onLine) {
+            offlineMessage.style.display = 'none';
+        } else {
+            offlineMessage.style.display = 'block';
+        }
+    }
+    updateOnlineStatus();
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+</script>
+
+</body>
+</html>
